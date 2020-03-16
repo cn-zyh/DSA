@@ -1,1 +1,66 @@
+/*
+//跟随邓俊辉老师学习数据结构
+quicksort思想：任取数组中的一个数e，确定其在最终排序数组中的秩r，将原数组划分为三部分（不大于e的数 + e + 不小于e的数），然后分别对左右两部分数组进行同样的策略；
+采用分治策略，理想状态下每次划分将数组划分为均匀的两部分，保证递归深度较小（为什么以及如何划分？？）
+与归并排序的区别在于 归并在于合并，快速排序在于分（选择快速划分）
+*/
+void quicksort(int arr[],int low,int high){//左闭右开区间
+    if(high-low<2) return;
+    int r = partition(arr,low,high);
+    quicksort(arr,low,r);
+    quicksort(arr,r+1,high);//r+1
+}
+
+//版本一 勤于拓展 懒于交换（缺点：大量甚至重复元素时，左右部分分布极不均匀，递归退化成单链，O(n**2)）
+int partition(int arr[],int l,int h){//左闭右开区间
+    int r = l + rand()%(h-l);
+    int e = arr[r];
+    arr[r] = arr[l];                //将arr[r]取出，同时arr[l]相当于空
+    --h;
+    while(l<h){                    //l,h交替空闲
+        while(l<h && e<=arr[h]) --h;
+        arr[l] = arr[h];
+        while(l<h && arr[l]<=e) ++l;
+        arr[h] = arr[l];
+    }//assert l==h
+    arr[l] = e;
+    return l;
+}
+//版本二 懒于拓展，勤于交换（对含大量重复元素的数组有优化处理 ）
+int partition(int arr[],int l,int h){
+    int r = l + rand()%(h-l);
+    int e = arr[r];
+    arr[r] = arr[1];
+    --h;
+    while(l<h){
+        while(l<h && e<arr[h]) --h; //<
+        if(l<h) arr[l++] = arr[h];
+        while(l<h && arr[l]<e) ++l; //<
+        if(l<h) arr[h--] = arr[l];
+    }//assert l == h 因为while(.){..if(l<h)..}
+    arr[l] = e;
+    return l;
+}
+//版本三 LGU版(作用???)
+int partition(int arr[],int l,int h){
+    swap(arr[l],arr[l+rand()%(h-l)]);
+    int pivot = arr[l];
+    int m = l;
+    for(int k=l+1;k<h;++k){
+        if(arr[k]<pivot)
+            swap(arr[++m],arr[k]);
+    }
+    swap(arr[l],arr[m]);
+    return m;
+}
+//
+
+
+
+
+
+
+
+
+
 
